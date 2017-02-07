@@ -161,6 +161,19 @@ def MinSkew(Genome):
     MyMin = min(SkewArray)
     return  [ i   for i in range(L+1) if SkewArray[i] == MyMin]
 
+def Skew(Genome):
+	#For coding course
+    SkewArray = {}
+    SkewArray[0] = 0
+    L = len(Genome)
+    for i in range(1,L+1):
+        if Genome[i-1] == "C":
+            SkewArray[i]=SkewArray[i-1] - 1
+        elif Genome[i-1] == "G":
+            SkewArray[i]=SkewArray[i-1] + 1
+        else:
+            SkewArray[i] = SkewArray[i-1]
+    return SkewArray
 
 def FormatList(List):
 # Formating list of numerbers for pint
@@ -251,3 +264,20 @@ def SymbolArray(Genome, symbol):
 	for i in range(n):
 		array[i]= PatternCount(ExtendedGenome[i:i+(n//2)],symbol)
 	return array
+
+
+def FasterSymbolArray(Genome, symbol):
+	#Compares edges of sliding window to add and subtract new symbols, Window length is half of genome.
+	#Requires PatternCount
+	array = {}
+	n = len(Genome)
+	ExtendedGenome = Genome + Genome[0:n // 2]
+	array[0] = PatternCount(Genome[0:n // 2], symbol)
+	for i in range(1, n):
+		array[i] = array[i - 1]
+		if ExtendedGenome[i + n // 2 - 1] == symbol:
+			array[i] = array[i] + 1
+		if ExtendedGenome[i - 1] == symbol:
+			array[i] = array[i] - 1
+	return array
+
